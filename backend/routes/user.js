@@ -4,7 +4,7 @@ import { ObjectId } from "mongodb";
 
 const router = express.Router() ; 
 
-/* // route to get all users : /api/user/
+// route to get all users : /api/user/
 router.get (
 	"/" , 
 	async (req , res) => {
@@ -12,7 +12,7 @@ router.get (
 		let results = await collection.find({}).toArray() ; // find ({}) = find everything
 		res.send(results).status(200) ; 
 	} 
-) ;  */
+) ; 
 
 
 router.get(
