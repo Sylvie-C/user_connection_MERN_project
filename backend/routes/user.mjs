@@ -1,25 +1,16 @@
 import express from "express"; 
-import db from "../db/connection.js"; 
+import db from "../db/connection.mjs"; 
 import { ObjectId } from "mongodb"; 
 
 const router = express.Router() ; 
 
-/* // route to get all users : /api/user/
-router.get (
-	"/" , 
-	async (req , res) => {
-		let collection = await db.collection("users") ; 
-		let results = await collection.find({}).toArray() ; // find ({}) = find everything
-		res.send(results).status(200) ; 
-	} 
-) ;  */
 
-
+// route to get a user by email (temporary)
 router.get(
-	"/:email" , 
+	"/email" , 
 	async (req , res) => {
 		let collection = await db.collection("users") ; 
-		let query = { email: new ObjectId(req.params.email) } ; 
+		let query = { email: req.query.email } ; 
 		let result = await collection.findOne(query) ; 
 
 		if (!result) res.send("Not found").status(404) ; 
