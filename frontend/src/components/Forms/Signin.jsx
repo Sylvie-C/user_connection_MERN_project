@@ -52,7 +52,7 @@ export default function Signin () {
       const data = {
         username: formDataObj.get("username") , 
         email: formDataObj.get("email") , 
-        password: pwdConfirmed
+        password: formDataObj.get("pwd02") , 
       } 
   
       try {
