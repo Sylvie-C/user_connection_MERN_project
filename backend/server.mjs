@@ -4,8 +4,7 @@ dotenv.config();
 import express from "express"; 
 import cors from "cors"; 
 
-
-import users from "./routes/user.js"; 
+import users from "./routes/user.mjs"; 
 
 
 const app = express(); 
