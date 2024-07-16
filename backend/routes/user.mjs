@@ -25,10 +25,9 @@ router.post(
   async (req , res) => {
     try {
       let newUser = {
-        name: req.body.name, 
-        surname: req.body.surname, 
         username: req.body.username, 
         email: req.body.email, 
+        password: req.body.password, 
         date: new Date() , 
       }; 
       let collection = await db.collection (process.env.USERS_COLLECTION) ; 
