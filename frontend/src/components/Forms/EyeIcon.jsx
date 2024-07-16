@@ -1,6 +1,5 @@
 import { useState } from "react" ; 
 
-
 export default function EyeIcon ( { eyeClicked } ) {
 
   const [ eyeOpened , setOpen ] = useState (true) ; 

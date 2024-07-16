@@ -83,6 +83,7 @@ export default function Signin () {
 
   return (
     <div className="p-2">
+      <h1 className="font-heading text-4xl text-center mb-6 md:mb-10">Sign in Form</h1>
       <form onSubmit={handleSubmit} className="mx-auto w-full sm:w-3/5 pt-4 md:pt-10 pb-10 flex flex-col bg-purple-400 rounded-md">
         <div className="mx-auto w-72 sm:w-fit sm:px-4">
           <div className="flex flex-col mb-4">

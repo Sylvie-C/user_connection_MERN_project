@@ -7,9 +7,9 @@ import App from './App.jsx'
 import './index.css'
 
 import Home from "./components/Home"
-import Login from "./components/Login.jsx"
-import Signin from './components/Signin.jsx'
-import Settings from "./components/Settings.jsx"
+import Login from "./components/Forms/Login.jsx"
+import Signin from './components/Forms/Signin.jsx'
+import Settings from "./protected/Settings.jsx"
 
 const router = createBrowserRouter ( [ 
 	{
@@ -46,11 +46,11 @@ const router = createBrowserRouter ( [
 	} , 
 
 	{
-		path: "/settings" , 
+		path: "/protected/settings" , 
 		element: <App /> , 
 		children: [
 			{
-				path: "/settings" , 
+				path: "/protected/settings" , 
 				element: <Settings />
 			}
 		]
