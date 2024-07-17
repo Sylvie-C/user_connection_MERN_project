@@ -1,8 +1,7 @@
 import express from "express"; 
 import bcrypt from "bcrypt" ; 
-import { ObjectId } from "mongodb"; 
 
-import db from "../db/connection.mjs"; 
+import UserModel from "../models/user.model.mjs" ; 
 
 
 const router = express.Router() ; 
@@ -12,10 +11,8 @@ router.post(
   "/" , 
   async (req , res) => {
     try {
-      let collection = db.collection (process.env.USERS_COLLECTION) ; 
-
       // Vérifier si l'email existe déjà
-      const existingUser = await collection.findOne( { email: req.body.email } );
+      const existingUser = await UserModel.findOne ( { email: req.body.email } ); 
 
       if (existingUser) {
         return res.status(400).send("An account already exist with this email.");
@@ -27,10 +24,9 @@ router.post(
           username: req.body.username, 
           email: req.body.email, 
           password: hashedPassword, 
-          date: new Date() , 
         }; 
 
-        let result = await collection.insertOne (newUser) ; 
+        const result = await UserModel.create(newUser);
         res.send(result).status(204) ; 
       }
     }
@@ -41,7 +37,9 @@ router.post(
   }
 )
 
+export default router ; 
 
+/* 
 // route to update a username : /api/user/:id
 router.patch (
 	"/:id" , 
@@ -97,6 +95,5 @@ router.delete (
       res.status(500).send ("Error deleting user") ; 
     }
   }
-) ; 
+) ;  */
 
-export default router ; 
