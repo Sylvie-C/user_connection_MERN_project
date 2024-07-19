@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom" ;
 
 import EyeIcon from "./EyeIcon";
 
-export default function Signin () {
+export default function Signup () {
 
   const [ pwd01Visibility , setPwd01Visibility ] = useState (false) ;  
   const [ pwd02Visibility , setPwd02Visibility ] = useState (false) ; 
@@ -57,7 +57,7 @@ export default function Signin () {
   
       try {
         const response = await fetch (
-          `${import.meta.env.VITE_BACKEND_URL}/api/user/` , // route defined in backend /user.js file
+          `${import.meta.env.VITE_BACKEND_URL}/api/user/signup` , // route defined in backend /user.js file
           {
             method: "POST" , 
             headers: { "Content-Type" : "application/json" } , 

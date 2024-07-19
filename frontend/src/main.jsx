@@ -8,7 +8,7 @@ import './index.css'
 
 import Home from "./components/Home"
 import Login from "./components/Forms/Login.jsx"
-import Signin from './components/Forms/Signin.jsx'
+import Signup from './components/Forms/Signup.jsx'
 import Settings from "./protected/Settings.jsx"
 
 const router = createBrowserRouter ( [ 
@@ -35,12 +35,12 @@ const router = createBrowserRouter ( [
 	} , 
 
 	{
-		path: "/signin" , 
+		path: "/signup" , 
 		element: <App /> , 
 		children: [
 			{
-				path: "/signin" , 
-				element: <Signin />, 
+				path: "/signup" , 
+				element: <Signup />, 
 			}
 		]
 	} , 
