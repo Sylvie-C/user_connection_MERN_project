@@ -3,13 +3,13 @@ import NavbarBtn from "./NavbarBtn" ;
 
 export default function Navbar () {
 
-  // -------  TO BE IMPLEMENTED : "Settings" button display (Redux Store ?)
+  // -------  TO BE IMPLEMENTED V02 : Settings button displayed if user connected (token)
   let display ; 
   let token ; 
 
   token = false; // SHOW / HIDE SETTINGS BTN 
 
-  if (token) { display = "inline-block" } // If token (user connected), display
+  if (token) { display = "inline-block" } 
   else { display = "hidden" }
   // --------------------------------------------------------------
 
