@@ -1,4 +1,5 @@
-
+# ignore backend changes from frontend
+**/backend
 
 # Logs
 logs
