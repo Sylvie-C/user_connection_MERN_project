@@ -37,7 +37,7 @@ This application is a simple User connection application, to :
     npm install
     ```
 
-3. Create a `.env` file and add the necessary environment variables, for both backend and frontend:
+3. Create a `.env` file and add the necessary environment variables:
     ```env
     PORT=your_port
     MONGO_URI=your_mongo_uri
@@ -60,7 +60,7 @@ This application is a simple User connection application, to :
     npm install
     ```
 
-3. Create a `.env` file in the `frontend` folder and add the necessary environment variables if needed:
+3. Create a `.env` file in the `frontend` folder and add the necessary environment variables (make sure to have your variables beginning with "VITE_" if use of VITE for frontend):
     ```env
     VITE_BACKEND_URL=your_backend_url
     ```
