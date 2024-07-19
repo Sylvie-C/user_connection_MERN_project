@@ -1,5 +1,4 @@
-# ignore backend directory (from frontend branch)
-**/backend
+
 
 # Logs
 logs
