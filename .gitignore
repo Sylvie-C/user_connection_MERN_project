@@ -1,5 +1,3 @@
-# Ignore frontend tests folder (from backend branch)
-**/frontend
 
 # Logs
 logs

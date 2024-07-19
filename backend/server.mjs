@@ -12,6 +12,7 @@ import users from "./routes/user.mjs";
 const swaggerDocs = yaml.load ("./swagger.yaml") ; 
 dotenv.config(); 
 const app = express(); 
+
 const PORT = process.env.PORT || ""; 
 
 app.use (cors()) ; 
