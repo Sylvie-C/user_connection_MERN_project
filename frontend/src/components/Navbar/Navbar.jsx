@@ -7,7 +7,7 @@ export default function Navbar () {
   let display ; 
   let token ; 
 
-  token = true; // SHOW / HIDE SETTINGS BTN 
+  token = false; // SHOW / HIDE SETTINGS BTN 
 
   if (token) { display = "inline-block" } // If token (user connected), display
   else { display = "hidden" }
