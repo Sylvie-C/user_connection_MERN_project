@@ -1,0 +1,61 @@
+openapi: 3.0.3
+info:
+  title: User API documentation - Swagger OpenAPI 3.0
+  description: |-
+    API for User Signup / Login
+  version: 1.0.0
+servers:
+  - url: http://localhost:5050/api/user
+tags:
+  - name: User
+    description: Operations about user
+paths:
+  /signup:
+    post:
+      tags:
+        - User
+      summary: Create user
+      description: User subscription with required email & password
+      operationId: create
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      required: 
+        - email
+        - password
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+  requestBodies:
+    User:
+      description: User object to be added to database
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
