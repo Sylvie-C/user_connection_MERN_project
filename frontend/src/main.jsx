@@ -7,8 +7,8 @@ import App from './App.jsx'
 import './index.css'
 
 import Home from "./components/Home"
-import Login from "./components/Forms/Login.jsx"
-import Signup from './components/Forms/Signup.jsx'
+import Login from "./components/forms/Login.jsx"
+import Signup from './components/forms/Signup.jsx'
 import Settings from "./protected/Settings.jsx"
 
 const router = createBrowserRouter ( [ 

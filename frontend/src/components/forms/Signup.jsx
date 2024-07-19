@@ -64,17 +64,19 @@ export default function Signup () {
             body: JSON.stringify(data) , 
           }
         )
-  
+        // HTTP resquest errors handling
         if (response.ok) {
           alert("Welcome ! You registered successfully.") ; 
           navigate("/login") ; 
-        }else{
-          alert("Oops ! There was a problem. You are not registered. ") ; 
+        }
+        else {
+          const responseMessage = await response.json() ; 
+          alert (responseMessage.message) ; 
         }
       }
-  
+      // Other errors handling (network, syntax ...)
       catch (err) {
-        console.error (err) ; 
+        console.error ("Internal Server Error. You are not registered. ") ; 
       }
     }else{
       alert("Passwords are not identical.") ; 
