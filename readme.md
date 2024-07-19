@@ -31,7 +31,7 @@ This application is a simple User connection application, to :
     cd user_connection_MERN_project
     ```
 
-2. Install server dependencies for backend and frontend :
+2. Install server dependencies:
     ```sh
     cd backend
     npm install
