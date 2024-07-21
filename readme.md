@@ -71,13 +71,13 @@ This application is a simple User connection application, to :
     ```
 
 ## Project Architecture
+```
 /backend
   ├── db
   ├── models
   ├── routes
   ├── .env
   └── server.js
-
 /frontend
   ├── public
   ├── src
@@ -87,4 +87,4 @@ This application is a simple User connection application, to :
       ├── App.jsx
       ├── main.jsx
   ├── .env
-  └── package.json
+  └── package.json```
