@@ -72,7 +72,7 @@ This application is a simple User connection application, to :
 
 ## Project Architecture
 /backend
-    ├── db
+  |--- db
     ├── models
     ├── routes
     ├── .env
