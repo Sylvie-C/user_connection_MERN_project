@@ -87,4 +87,5 @@ This application is a simple User connection application, to :
       ├── App.jsx
       ├── main.jsx
   ├── .env
-  └── package.json```
+  └── package.json
+  ```
