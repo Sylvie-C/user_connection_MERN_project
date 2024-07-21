@@ -71,7 +71,8 @@ This application is a simple User connection application, to :
     ```
 
 ## Project Architecture
-```/backend
+```
+/backend
     ├── db
     ├── models
     ├── routes
