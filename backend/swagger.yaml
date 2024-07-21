@@ -30,6 +30,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        "400": 
+          description: An account already exists with this email
+        "500": 
+          description: Internal Server Error
 components:
   schemas:
     User:

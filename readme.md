@@ -77,6 +77,7 @@ This application is a simple User connection application, to :
   ├── routes
   ├── .env
   └── server.js
+
 /frontend
   ├── public
   ├── src
