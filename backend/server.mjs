@@ -1,6 +1,4 @@
 import dotenv from "dotenv"; 
-
-
 import express from "express"; 
 import cors from "cors"; 
 
@@ -26,7 +24,6 @@ app.use (
 ) ; 
 
 app.listen(
-  PORT , 
+  PORT , "0.0.0.0" , 
   ( console.log (`Server listening on port ${PORT}`))
 ) ; 
-
