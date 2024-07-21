@@ -72,11 +72,11 @@ This application is a simple User connection application, to :
 
 ## Project Architecture
 /backend
-  ├── db
-  ├── models
-  ├── routes
-  ├── .env
-  └── server.js
+    ├── db
+    ├── models
+    ├── routes
+    ├── .env
+    └── server.js
 /frontend
   ├── public
   ├── src
