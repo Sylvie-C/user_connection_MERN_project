@@ -11,7 +11,7 @@ const swaggerDocs = yaml.load ("./swagger.yaml") ;
 dotenv.config(); 
 const app = express(); 
 
-const PORT = process.env.PORT || "0.0.0.0"; 
+const PORT = process.env.PORT ; 
 
 app.use (cors()) ; 
 app.use (express.json()) ; 
@@ -24,6 +24,6 @@ app.use (
 ) ; 
 
 app.listen(
-  PORT , "0.0.0.0" , 
+  PORT ,
   ( console.log (`Server listening on port ${PORT}`))
 ) ; 
