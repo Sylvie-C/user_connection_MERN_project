@@ -69,3 +69,21 @@ This application is a simple User connection application, to :
     ```sh
     npm start
     ```
+
+## Project Architecture
+/backend
+  ├── db
+  ├── models
+  ├── routes
+  ├── .env
+  └── server.js
+/frontend
+  ├── public
+  ├── src
+      ├── components
+      ├── App.css
+      ├── index.css
+      ├── App.jsx
+      ├── main.jsx
+  ├── .env
+  └── package.json
