@@ -13,8 +13,13 @@ const app = express();
 
 const PORT = process.env.PORT || "" ; 
 
-app.use (cors()) ; 
 app.use (express.json()) ; 
+app.use (cors(
+  {
+    origin: `${process.env.CORS_ORIGIN}`
+  }
+)) ; 
+
 app.use ("/api/user" , users) ; 
 
 app.use (
