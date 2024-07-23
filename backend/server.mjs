@@ -29,6 +29,6 @@ app.use (
 ) ; 
 
 app.listen(
-  PORT , "0.0.0.0" ,
+  PORT ,
   ( console.log (`Server listening on port ${PORT}`))
 ) ; 
