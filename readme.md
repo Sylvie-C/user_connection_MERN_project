@@ -39,8 +39,9 @@ This application is a simple User connection application, to :
 
 3. Create a `.env` file and add the necessary environment variables:
     ```env
-    PORT=your_port
+    PORT=your_backend_server_port_number
     MONGO_URI=your_mongo_uri
+    CORS_ORIGIN=your_frontend_url
     JWT_SECRET=your_jwt_secret
     ```
 
@@ -73,11 +74,11 @@ This application is a simple User connection application, to :
 ## Project Architecture
 ```
 /backend
-    ├── db
-    ├── models
-    ├── routes
-    ├── .env
-    └── server.js
+  ├── db
+  ├── models
+  ├── routes
+  ├── .env
+  └── server.js
 /frontend
   ├── public
   ├── src
@@ -87,5 +88,4 @@ This application is a simple User connection application, to :
       ├── App.jsx
       ├── main.jsx
   ├── .env
-  └── package.json
-  ```
+  └── package.json```

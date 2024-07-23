@@ -1,6 +1,4 @@
 import dotenv from "dotenv"; 
-
-
 import express from "express"; 
 import cors from "cors"; 
 
@@ -13,10 +11,15 @@ const swaggerDocs = yaml.load ("./swagger.yaml") ;
 dotenv.config(); 
 const app = express(); 
 
-const PORT = process.env.PORT || ""; 
+const PORT = process.env.PORT || "" ; 
 
-app.use (cors()) ; 
 app.use (express.json()) ; 
+app.use (cors(
+  {
+    origin: `${process.env.CORS_ORIGIN}` // frontend URI
+  }
+)) ; 
+
 app.use ("/api/user" , users) ; 
 
 app.use (
@@ -26,7 +29,6 @@ app.use (
 ) ; 
 
 app.listen(
-  PORT , 
+  PORT ,
   ( console.log (`Server listening on port ${PORT}`))
 ) ; 
-

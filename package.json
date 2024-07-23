@@ -1,0 +1,17 @@
+{
+  "name": "user_connection_mern_project",
+  "version": "1.0.0",
+  "description": "## Description This project is a fullstack application developped with the MERN stack (MongoDB, Express.js, React, Node.js) with Vite and TailwindCSS.",
+  "main": "/frontend/main.jsx",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1", 
+    "install-backend": "cd backend && npm install",
+    "start-backend": "cd backend && npm start",
+    "install-frontend": "cd frontend && npm install",
+    "build-frontend": "cd frontend && npm run build",
+    "start-frontend": "cd frontend && npm run start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
