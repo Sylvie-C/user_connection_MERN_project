@@ -9,6 +9,7 @@ import './index.css'
 import Home from "./components/Home"
 import Login from "./components/forms/Login.jsx"
 import Signup from './components/forms/Signup.jsx'
+import HomeConnect from "./protected/HomeConnect.jsx"
 import Settings from "./protected/Settings.jsx"
 
 const router = createBrowserRouter ( [ 
@@ -44,6 +45,17 @@ const router = createBrowserRouter ( [
 			}
 		]
 	} , 
+
+	{
+		path: "/protected" , 
+		element: <App /> , 
+		children: [
+			{
+				path: "/protected" , 
+				element: <HomeConnect /> , 
+			}
+		]
+	} ,
 
 	{
 		path: "/protected/settings" , 

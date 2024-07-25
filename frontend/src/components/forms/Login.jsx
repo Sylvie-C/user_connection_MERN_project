@@ -1,10 +1,12 @@
-
 import { useState } from "react"; 
+import { useNavigate } from "react-router-dom"; 
 import EyeIcon from "./EyeIcon"; 
 
 export default function Login () {
 
   const [ pwdVisibility , setPwdVisibility ] = useState (false) ;  
+
+  const navigate = useNavigate() ; 
 
   // display password on clic on eye icon (password hidden by default)
   const showPassword = (value) => {
@@ -28,8 +30,8 @@ export default function Login () {
         password: formDataObj.get("password") ,
       }
 
-      const response = await fetch (
-        `${import.meta.env.VITE_BACKEND_URL}/api/user/` , // route defined in backend /user.js file
+      const requestReturn = await fetch (
+        `${import.meta.env.VITE_BACKEND_URL}/api/user/login` , // route defined in backend /user.js file
         {
           method: "POST" , 
           headers: { "Content-Type" : "application/json" } , 
@@ -37,7 +39,13 @@ export default function Login () {
         }
       )
 
-      if (response.ok) {
+      if (requestReturn.ok) {
+
+        const response = await requestReturn.json() ; 
+        const token = response.token ; 
+
+        console.log (token) ; 
+
         alert("You are now logged in.") ; 
         navigate("/protected") ; 
       }else{
