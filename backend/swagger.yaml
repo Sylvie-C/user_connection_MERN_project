@@ -9,6 +9,7 @@ servers:
 tags:
   - name: User
     description: Operations about user
+    
 paths:
   /signup:
     post:
@@ -18,22 +19,79 @@ paths:
       description: User subscription with required email & password
       operationId: create
       requestBody:
-        description: Created user object
+        description: At least email & password, username not required
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/User'
       responses:
-        default:
+        "201": 
           description: User successfully registered
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    format: hexadecimal
+                    description: unique identifier (mongodb 'ObjectId' type)
+                    example: "507f1f77bcf86cd799439011"
+                  username: 
+                    type: string
+                  email: 
+                    type: string
+                  password:
+                    type: string
+                    description: hashed password
+                  date: 
+                    format: date
+                    description: date of registration
+                    example: 2024-07-25T13:36:52.124+00:00
         "400": 
           description: An account already exists with this email
         "500": 
           description: Internal Server Error
+          
+  /login: 
+    post:
+      tags:
+        - User
+      summary: Logs user into the system
+      description: ''
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User_login'
+      responses:
+        default: 
+          description: User successfully logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId: 
+                    type: string
+                    example: 66a254f4e08ab91c... 
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ... 
+        '404':
+          description: User not found
+        '401': 
+          description: Unauthorized
+        '500': 
+          description: Internal Server Error
+        
 components:
   schemas:
     User:
@@ -41,6 +99,16 @@ components:
       properties:
         username:
           type: string
+        email:
+          type: string
+        password:
+          type: string
+      required: 
+        - email
+        - password
+    User_login: 
+      type: object
+      properties:
         email:
           type: string
         password:
@@ -63,3 +131,17 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/User'
+    User_login:
+      description: User object to submit for login
+      content: 
+        application/json: 
+          schema: 
+            $ref: '#/components/schemas/User_login'
+  securitySchemes:
+    bearerAuth: 
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security: 
+  - bearerAuth: []

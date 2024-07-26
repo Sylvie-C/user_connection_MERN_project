@@ -6,7 +6,7 @@ This project is a fullstack application developped with the MERN stack (MongoDB,
 This application is a simple User connection application, to : 
 - add a new user to a Mongo database, 
 - get a user from a Mongo database, 
-- update a username, 
+- update a username or a user password in a Mongo database, 
 - delete a user from a Mongo database. 
 
 ## Features
@@ -15,6 +15,7 @@ This application is a simple User connection application, to :
 - **Reactive UI**: Dynamic user interface with React.
 - **RESTful API**: Well-structured endpoints to interact with the database.
 - **Mongoose** : Data object defined with structured models. 
+- **Swagger**: API Swagger documentation (backend_url/api-docs route). 
 
 ## Prerequisites
 - Make sure you have installed [Node.js](https://nodejs.org/) on your machine. 

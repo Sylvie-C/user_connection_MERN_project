@@ -42,8 +42,9 @@ export default function Login () {
       if (requestReturn.ok) {
 
         const response = await requestReturn.json() ; 
-        const token = response.token ; 
+        console.log (response) ; 
 
+        const token = response.token ; 
         console.log (token) ; 
 
         alert("You are now logged in.") ; 
