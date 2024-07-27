@@ -1,12 +1,18 @@
 import { useState } from "react"; 
 import { useNavigate } from "react-router-dom"; 
+import { useDispatch , useSelector } from "react-redux"; 
+
+import { setAuth } from "../../features/login/loginSlice";
+import { getAuth } from "../../selectors"; 
+
 import EyeIcon from "./EyeIcon"; 
 
 export default function Login () {
 
   const [ pwdVisibility , setPwdVisibility ] = useState (false) ;  
-
   const navigate = useNavigate() ; 
+  const dispatch = useDispatch() ; 
+  const authState = useSelector(getAuth) ; 
 
   // display password on clic on eye icon (password hidden by default)
   const showPassword = (value) => {
@@ -42,20 +48,20 @@ export default function Login () {
       if (requestReturn.ok) {
 
         const response = await requestReturn.json() ; 
-        console.log (response) ; 
-
         const token = response.token ; 
-        console.log (token) ; 
 
-        alert("You are now logged in.") ; 
-        navigate("/protected") ; 
-      }else{
-        alert("Oops ! There was a problem. You are not registered. ") ; 
+        if (token) {
+          dispatch(setAuth()) ; 
+          console.log ("mode connecté ? : " , authState) ; 
+
+          alert("You are now logged in.") ; 
+          navigate("/protected") ; 
+        }
       }
     }
 
     catch (err) {
-      console.error (err) ; 
+      console.error ("There was a problem : " , err) ; 
     }
   }
 
