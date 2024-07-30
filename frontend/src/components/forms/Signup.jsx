@@ -3,11 +3,16 @@ import { useNavigate } from "react-router-dom" ;
 
 import EyeIcon from "./EyeIcon";
 
+import { useSignupMutation } from "../../features/signup/signupAPI";
+
 export default function Signup () {
 
   const [ pwd01Visibility , setPwd01Visibility ] = useState (false) ;  
   const [ pwd02Visibility , setPwd02Visibility ] = useState (false) ; 
+
   const navigate = useNavigate() ; 
+
+  const [signup] = useSignupMutation() ; // use subscription mutation hook
 
   // display password on clic on eye icon (password hidden by default)
   const showPassword01 = (value) => {
@@ -56,27 +61,14 @@ export default function Signup () {
       } 
   
       try {
-        const response = await fetch (
-          `${import.meta.env.VITE_BACKEND_URL}/api/user/signup` , // route defined in backend /user.js file
-          {
-            method: "POST" , 
-            headers: { "Content-Type" : "application/json" } , 
-            body: JSON.stringify(data) , 
-          }
-        )
-        // HTTP resquest errors handling
-        if (response.ok) {
-          alert("Welcome ! You registered successfully.") ; 
-          navigate("/login") ; 
-        }
-        else {
-          const responseMessage = await response.json() ; 
-          alert (responseMessage.message) ; 
-        }
+        const result = await signup (data).unwrap(); 
+
+        alert("Welcome ! You registered successfully.") ; 
+        navigate("/login") ;         
       }
-      // Other errors handling (network, syntax ...)
       catch (err) {
         console.error ("Internal Server Error. You are not registered. ") ; 
+        alert (err.data?.message || "Registration failed" ) ; 
       }
     }else{
       alert("Passwords are not identical.") ; 

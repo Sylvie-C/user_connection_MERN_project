@@ -2,10 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom"; 
 import { useDispatch , useSelector } from "react-redux"; 
 
+import EyeIcon from "./EyeIcon"; 
+
 import { setAuth } from "../../features/login/loginSlice";
+import { useLoginUserMutation } from '../../features/login/loginAPI';
 import { getAuth } from "../../selectors"; 
 
-import EyeIcon from "./EyeIcon"; 
 
 export default function Login () {
 
@@ -13,6 +15,7 @@ export default function Login () {
   const navigate = useNavigate() ; 
   const dispatch = useDispatch() ; 
   const authState = useSelector(getAuth) ; 
+  const [ loginUser, { isLoading, isError, error } ] = useLoginUserMutation();
 
   // display password on clic on eye icon (password hidden by default)
   const showPassword = (value) => {
@@ -30,11 +33,14 @@ export default function Login () {
     const formDataObj = new FormData (event.target); 
     console.log (formDataObj); 
 
+    const data = {
+      email: formDataObj.get("email"), 
+      password: formDataObj.get("password") ,
+    }
+
     try {
-      const data = {
-        email: formDataObj.get("email"), 
-        password: formDataObj.get("password") ,
-      }
+      const result = await loginUser(data).unwrap();
+      const token = result.token; 
 
       const requestReturn = await fetch (
         `${import.meta.env.VITE_BACKEND_URL}/api/user/login` , // route defined in backend /user.js file
@@ -45,23 +51,18 @@ export default function Login () {
         }
       )
 
-      if (requestReturn.ok) {
+      if (token) {
+        dispatch(setAuth()) ; 
+        console.log ("mode connecté ? : " , authState) ; 
 
-        const response = await requestReturn.json() ; 
-        const token = response.token ; 
-
-        if (token) {
-          dispatch(setAuth()) ; 
-          console.log ("mode connecté ? : " , authState) ; 
-
-          alert("You are now logged in.") ; 
-          navigate("/protected") ; 
-        }
+        alert("You are now logged in.") ; 
+        navigate("/protected") ; 
       }
     }
 
     catch (err) {
       console.error ("There was a problem : " , err) ; 
+      alert("login failed") ; 
     }
   }
 

@@ -7,15 +7,13 @@ export default function Settings () {
   // display password on clic on eye icon (password hidden by default)
   const showPassword = (value) => {
     // if eye is closed, password is visible
-    if (value) {
-      setPwdVisibility (true) ; 
-    }else{
-      setPwdVisibility (false) ; 
-    }
+    if (value) { setPwdVisibility (true) ; }
+    else{ setPwdVisibility (false) ; }
   }
 
   const handleSubmit = (event) => {
     event.preventDefault() ; 
+    
     console.log ("le bouton fonctionne") ; 
   }
 
