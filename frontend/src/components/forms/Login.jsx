@@ -1,23 +1,22 @@
 import { useState } from "react"; 
 import { useNavigate } from "react-router-dom"; 
-import { useDispatch , useSelector } from "react-redux"; 
+import { useDispatch } from "react-redux"; 
 
 import EyeIcon from "./EyeIcon"; 
 
-import { setAuth } from "../../features/login/loginSlice";
-import { useLoginUserMutation } from '../../features/login/loginAPI';
-import { getAuth } from "../../selectors"; 
+import { setAuth , setUsername } from "../../features/login/loginSlice";
+import { useLoginUserMutation } from '../../features/login/loginAPI'; 
 
 
 export default function Login () {
 
-  const [ pwdVisibility , setPwdVisibility ] = useState (false) ;  
   const navigate = useNavigate() ; 
   const dispatch = useDispatch() ; 
-  const authState = useSelector(getAuth) ; 
-  const [ loginUser, { isLoading, isError, error } ] = useLoginUserMutation();
+  const [ loginUser, { isLoading, isError, error } ] = useLoginUserMutation(); // Query RTK data fetch
 
-  // display password on clic on eye icon (password hidden by default)
+  const [ pwdVisibility , setPwdVisibility ] = useState (false) ;  
+
+  // display password on clic on eye icon (hidden by default)
   const showPassword = (value) => {
     // if eye is closed, password is visible
     if (value) {
@@ -31,7 +30,6 @@ export default function Login () {
     event.preventDefault() ; 
     
     const formDataObj = new FormData (event.target); 
-    console.log (formDataObj); 
 
     const data = {
       email: formDataObj.get("email"), 
@@ -40,20 +38,11 @@ export default function Login () {
 
     try {
       const result = await loginUser(data).unwrap();
-      const token = result.token; 
-
-      const requestReturn = await fetch (
-        `${import.meta.env.VITE_BACKEND_URL}/api/user/login` , // route defined in backend /user.js file
-        {
-          method: "POST" , 
-          headers: { "Content-Type" : "application/json" } , 
-          body: JSON.stringify(data) , 
-        }
-      )
+      const token = result?.token ; 
 
       if (token) {
-        dispatch(setAuth()) ; 
-        console.log ("mode connecté ? : " , authState) ; 
+        dispatch(setAuth( { isAuthenticated: true } )) ; 
+        dispatch(setUsername( { user_name: result?.userName } ));
 
         alert("You are now logged in.") ; 
         navigate("/protected") ; 
@@ -65,6 +54,9 @@ export default function Login () {
       alert("login failed") ; 
     }
   }
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error occurred: {error.message}</div>;
 
   return (
     <div className="p-2">

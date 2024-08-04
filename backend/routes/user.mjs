@@ -57,14 +57,20 @@ router.post (
       ); 
 
       const userId = user._id ; 
+      const userName = user.username ; 
 
-      return res.status(200).json({ userId , token });
+      return res.status(200).json( { userId , userName , token } );
     }
     catch (err) {
       console.error('Connection error:', err);
-      return res.status(500).json({ message: 'Internal Server error.' });
+      return res.status(500).json( { message: 'Internal Server error.' } );
     }
   }
 )
+
+// route to patch username : 
+
+
+
 
 export default router ; 

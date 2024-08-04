@@ -3,9 +3,6 @@ import ReactDOM from 'react-dom/client'
 
 import { createBrowserRouter , RouterProvider } from "react-router-dom"
 
-import { useSelector } from "react-redux"
-import { getAuth } from "./selectors.js"
-
 import App from './App.jsx'
 import './index.css'
 
@@ -17,6 +14,7 @@ import NotFound from "./components/NotFound.jsx"
 import PrivateRoute from "./components/protected/PrivateRoute.jsx"
 import HomeConnect from "./components/protected/HomeConnect.jsx"
 import Settings from "./components/protected/Settings.jsx"
+
 
 const router = createBrowserRouter ( [ 
 	// <Home /> child
