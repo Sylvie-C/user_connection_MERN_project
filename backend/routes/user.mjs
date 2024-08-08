@@ -4,15 +4,14 @@ import jwt from "jsonwebtoken" ;
 
 import UserModel from "../models/user.model.mjs" ; 
 
+
 const router = express.Router() ; 
 
-
-// route to create new user : /api/user/signup
 router.post(
   "/signup" , 
   async (req , res) => {
     try {
-        // Hacher le mot de passe avant de l'enregistrer
+        // password hash + implicit salt
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
         let newUser = {
@@ -32,7 +31,6 @@ router.post(
   }
 )
 
-// route to login : /api/user/login
 router.post (
   "/login" , 
   async (req , res) => {
@@ -56,10 +54,10 @@ router.post (
         { expiresIn: "1h" }
       ); 
 
-      const userId = user._id ; 
+      const email = user.email ; 
       const userName = user.username ; 
 
-      return res.status(200).json( { userId , userName , token } );
+      return res.status(200).json( { email , userName , token } );
     }
     catch (err) {
       console.error('Connection error:', err);
@@ -68,9 +66,78 @@ router.post (
   }
 )
 
-// route to patch username : 
+router.patch (
+  "/update/username" , 
+  async (req, res) => {
+    try {
+      const user = await UserModel.findOne ( { email: req.body.email } ) ; 
+      if (!user) { return res.status(404).json ( { message: "User not registered" } ) }
 
+      // check token
+      const jwtToken = req.headers.authorization.split('Bearer ')[1].trim() ; 
+      const decodedJwtToken = jwt.verify(jwtToken , process.env.JWT_SECRET) ; 
 
+      if (!decodedJwtToken) {
+        return res.status(403).json( { message: "Invalid token for this user" } );
+      }  
+      
+      // check password
+      const isValid = await bcrypt.compare ( req.body.password , user.password ) ; 
+      if (!isValid) { 
+        return res.status(401).json( { message: "Wrong password" } ) ; 
+      } ;  
+ 
+      // update username
+      const newUser = await UserModel.findOneAndUpdate(
+        { email: req.body.email },
+        { $set: { username: req.body.username } },
+        { new: true } , 
+      );
+      return res.status(200).json( { message : "Username updated successfully" , modifiedObj: newUser } ); 
+    } 
+    catch (err) {
+      console.error('Error in user.mjs file : ', err); 
+      return res.status(500).json( { message: "Internal server error : username not updated" } );
+    }
+  }
+)
 
+router.patch(
+  '/update/password', 
+  async (req, res) => {
+    try {
+      // check token
+      const jwtToken = req.headers.authorization.split('Bearer ')[1].trim();
+      const decodedJwtToken = jwt.verify(jwtToken, process.env.JWT_SECRET);
+
+      if (decodedJwtToken._id !== req.body.userId) {
+        return res.status(403).json({ message: "Invalid token for this user" });
+      }
+
+      // check email
+      const user = await UserModel.findOne({ email: decodedJwtToken.email });
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // check password
+      const isPasswordCorrect = await bcrypt.compare(req.body.currentPassword, user.password);
+      if (!isPasswordCorrect) {
+        return res.status(403).json({ message: "Current password is incorrect" });
+      }
+
+      // Hash password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
+
+      // Update password
+      user.password = hashedPassword;
+      await user.save();
+
+      return res.json({ message: "Password updated successfully" });
+    } catch (error) {
+      return res.status(500).json({ message: "Server error", error });
+    }
+});
 
 export default router ; 

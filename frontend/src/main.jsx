@@ -9,7 +9,7 @@ import './index.css'
 import Home from "./components/Home"
 import Login from "./components/forms/Login.jsx"
 import Signup from './components/forms/Signup.jsx'
-import NotFound from "./components/NotFound.jsx"
+import Message from "./components/Message.jsx"
 
 import PrivateRoute from "./components/protected/PrivateRoute.jsx"
 import HomeConnect from "./components/protected/HomeConnect.jsx"
@@ -83,14 +83,14 @@ const router = createBrowserRouter ( [
 		]
 	} , 
 
-	// <NotFound /> child
+	// <Message /> child
 	{
 		path: "*" , 
 		element: <App /> , 
 		children: [
 			{
 				path: "*" , 
-				element: <NotFound /> 
+				element: <Message text="Error 404 : Oups ! Nothing here !" /> 
 			}
 		]
 	}

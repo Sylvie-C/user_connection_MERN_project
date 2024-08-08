@@ -1,20 +1,60 @@
-import { useState } from "react"; 
-import EyeIcon from "../forms/EyeIcon";
+import { useState } from "react" ; 
+import { useSelector , useDispatch } from "react-redux" ; 
+
+import EyeIcon from "../forms/EyeIcon" ;
+import Message from "../../components/Message" ; 
+
+import { getUserEmail , getToken } from "../../selectors" ; 
+import { useUpdateUsernameMutation } from "../../features/updateUser/updateUserAPI" ; 
+import { setUsername } from "../../features/login/loginSlice" ; 
+
 
 export default function Settings () {
+  const dispatch = useDispatch() ; 
   const [ pwdVisibility , setPwdVisibility ] = useState (false) ; 
+
+  const storedEmail = useSelector( getUserEmail ) ; 
+  const storedToken = useSelector( getToken ) ; 
+
+  const [updateUsername, { isLoading, isError, error, data }] = useUpdateUsernameMutation();
 
   // display password on clic on eye icon (password hidden by default)
   const showPassword = (value) => {
     // if eye is closed, password is visible
     if (value) { setPwdVisibility (true) ; }
-    else{ setPwdVisibility (false) ; }
+    else { setPwdVisibility (false) ; }
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault() ; 
     
-    console.log ("le bouton fonctionne") ; 
+    const formDataObj = new FormData (event.target); 
+
+    const reqData = {
+      username: formDataObj.get("username") , 
+      password: formDataObj.get("currentpassword") ,
+      email: storedEmail,
+      token: storedToken, 
+    }
+
+    try {
+      const result = await updateUsername(reqData).unwrap();
+      console.log('Username updated:', result);
+      console.log ("data from try ? : " , data) ; 
+    } catch (error) {
+      console.error('Failed to update username:', error);
+    }
+  }
+
+  // Confirmation messages handling
+  if (isLoading) return <Message text="Loading : please wait ..." /> ;
+  if (isError) { 
+    const errorMessage = `${error.status} : ${JSON.stringify(error.data.message)}` ; 
+    return <Message text= {errorMessage} /> ; 
+  }
+  if (data) {
+    dispatch (setUsername ( { storeUsername: data?.modifiedObj.username } )) ; 
+    return ( <Message text="Data successfully updated" /> ) ; 
   }
 
   return (

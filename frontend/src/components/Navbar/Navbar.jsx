@@ -1,4 +1,4 @@
-import { useSelector , useDispatch } from "react-redux" ; 
+import { useSelector } from "react-redux" ; 
 
 import { getAuth } from "../../selectors" ; 
 
@@ -9,7 +9,7 @@ export default function Navbar () {
 
   return(
       <nav className="w-full lg:max-w-5xl mx-auto flex justify-between items-center">
-        <NavbarBtn btnTxt="Back Home" destination={ isAuth && "/protected" } />
+        <NavbarBtn btnTxt="Back Home" destination={ isAuth ? "/protected" : "/" } />
 
         { isAuth &&
           <div className="flex items-center">    

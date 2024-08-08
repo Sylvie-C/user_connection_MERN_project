@@ -4,7 +4,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 // Query RTK login hook
 export const loginAPI = createApi({
-  reducerPath: 'api',
+  reducerPath: 'loginApi',
   baseQuery: fetchBaseQuery({ baseUrl: `${backendUrl}/api/user` }),
   endpoints: (builder) => ({
     loginUser: builder.mutation({

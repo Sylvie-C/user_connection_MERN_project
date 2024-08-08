@@ -2,10 +2,8 @@ import { useSelector } from "react-redux" ;
 import { getAuth , getUsername } from '../../selectors';
 
 export default function HomeConnect () {
-  const username = useSelector(getUsername) ; 
-  const isAuth = useSelector(getAuth) ; 
-
-  console.log ("isAuth from <HomeConnect/> : " , isAuth); 
+  let username = useSelector( getUsername ) ; 
+  const isAuth = useSelector( getAuth ) ; 
   
   return (
     isAuth && 
