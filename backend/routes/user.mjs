@@ -106,25 +106,22 @@ router.patch(
   '/update/password', 
   async (req, res) => {
     try {
+      const user = await UserModel.findOne ( { email: req.body.email } ) ; 
+      if (!user) { return res.status(404).json ( { message: "User not registered" } ) }
+
       // check token
-      const jwtToken = req.headers.authorization.split('Bearer ')[1].trim();
-      const decodedJwtToken = jwt.verify(jwtToken, process.env.JWT_SECRET);
+      const jwtToken = req.headers.authorization.split('Bearer ')[1].trim() ; 
+      const decodedJwtToken = jwt.verify(jwtToken , process.env.JWT_SECRET) ; 
 
-      if (decodedJwtToken._id !== req.body.userId) {
-        return res.status(403).json({ message: "Invalid token for this user" });
-      }
-
-      // check email
-      const user = await UserModel.findOne({ email: decodedJwtToken.email });
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
+      if (!decodedJwtToken) {
+        return res.status(403).json( { message: "Invalid token for this user" } );
+      }  
 
       // check password
-      const isPasswordCorrect = await bcrypt.compare(req.body.currentPassword, user.password);
-      if (!isPasswordCorrect) {
-        return res.status(403).json({ message: "Current password is incorrect" });
-      }
+      const isValid = await bcrypt.compare ( req.body.password , user.password ) ; 
+      if (!isValid) { 
+        return res.status(401).json( { message: "Unauthorized : Wrong password" } ) ; 
+      } ; 
 
       // Hash password
       const salt = await bcrypt.genSalt(10);
@@ -134,9 +131,9 @@ router.patch(
       user.password = hashedPassword;
       await user.save();
 
-      return res.json({ message: "Password updated successfully" });
+      return res.status(200).json({ message: "Password updated successfully" });
     } catch (error) {
-      return res.status(500).json({ message: "Server error", error });
+      return res.status(500).json({ message: "Internal server error", error });
     }
 });
 

@@ -17,7 +17,15 @@ export const updateUserAPI = createApi({
       }),
       invalidates: ['User'],
     }),
+    updatePassword: builder.mutation({
+      query: (userData) => ({
+        url: "/update/password" , 
+        method: "PATCH", 
+        headers: { "Authorization" : `Bearer ${userData.token}` }, 
+        body: userData, 
+      })
+    })
   }),
 });
 
-export const { useUpdateUsernameMutation } = updateUserAPI;
+export const { useUpdateUsernameMutation , useUpdatePasswordMutation } = updateUserAPI;

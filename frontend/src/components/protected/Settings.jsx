@@ -6,7 +6,7 @@ import EyeIcon from "../forms/EyeIcon" ;
 import Message from "../../components/Message" ; 
 
 import { getUserEmail , getToken } from "../../selectors" ; 
-import { useUpdateUsernameMutation } from "../../features/updateUser/updateUserAPI" ; 
+import { useUpdateUsernameMutation , useUpdatePasswordMutation } from "../../features/updateUser/updateUserAPI" ; 
 import { setUsername } from "../../features/login/loginSlice" ; 
 
 
@@ -14,20 +14,28 @@ export default function Settings () {
   const dispatch = useDispatch() ; 
   const navigate = useNavigate() ; 
 
-  const [ pwdVisibility , setPwdVisibility ] = useState (false) ; // show/hide password state
+  const [ pwdVisible , setPwdVisible ] = useState (false) ; // show/hide password state
+  const [ newPwdVisible , setNewPwdVisible ] = useState( false) ; 
   const [ message , setMessage ] = useState (null) ; // server response message
 
   const storedEmail = useSelector( getUserEmail ) ; 
   const storedToken = useSelector( getToken ) ; 
 
-  // database interaction
-  const [updateUsername, { isLoading, isError, error, data }] = useUpdateUsernameMutation();
+  // database interactions
+  const [updateUsername, { isLoading: isUpdatingUsername, isError: isUsernameUpdateError, error: usernameUpdateError, data: usernameUpdateData }] = useUpdateUsernameMutation();
+  const [updatePassword, { isLoading: isUpdatingPassword, isError: isPasswordUpdateError, error: passwordUpdateError, data: passwordUpdateData }] = useUpdatePasswordMutation();
+  
 
   // display password on clic on eye icon (password hidden by default)
   const showPassword = (value) => {
     // if eye is closed, password is visible
-    if (value) { setPwdVisibility (true) ; }
-    else { setPwdVisibility (false) ; }
+    if (value) { setPwdVisible (true) ; }
+    else { setPwdVisible (false) ; }
+  }
+
+  const showNewPassword = (value) => {
+    if (value) { setNewPwdVisible(true) }
+    else { setNewPwdVisible(false)}
   }
 
   // handle form submit
@@ -37,40 +45,59 @@ export default function Settings () {
     const formDataObj = new FormData (event.target); 
 
     const reqData = {
-      username: formDataObj.get("username") , 
-      newpassword: formDataObj.get("newpassword") , 
-      password: formDataObj.get("currentpassword") ,
       email: storedEmail,
+      password: formDataObj.get("currentpassword") ,
       token: storedToken, 
+      newPassword: formDataObj.get("newpassword") , 
     }
+
+    // if username not empty, add it to data request
+    const newUsername = formDataObj.get("username") ; 
+    if (newUsername !== "") { reqData.username = formDataObj.get("username") } ; 
 
     try {
       if (reqData.username !== "") {
-        const result = await updateUsername(reqData).unwrap();
+        const usernameReturn = await updateUsername(reqData).unwrap();
       }
-    } catch (error) {
-      console.error('Failed to update username:', error);
+    } 
+    catch (usernameUpdateError) {
+      console.error('Failed to update user:', usernameUpdateError);
+    }
+
+    try {
+      if (reqData.newPassword !== "") {
+        const pwdReturn = await updatePassword(reqData).unwrap(); 
+      }
+    }
+    catch (passwordUpdateError) {
+      console.error("Failed to update password: " , passwordUpdateError) ; 
     }
   }
 
   // on every server response (data returned after submit), display message to user
   useEffect(
     () => {
-      if (isLoading) {
+      if (isUpdatingUsername || isUpdatingPassword ) {
         setMessage("Loading... Please wait...") ; 
       }
-      else if (isError) {
-        const errorMessage = `${error.status} : ${JSON.stringify(error.data.message)}` ; 
-        setMessage (errorMessage) ; 
+      else if (isUsernameUpdateError || isPasswordUpdateError) {
+        const usernameErrMessage = `${usernameUpdateError.status} : ${JSON.stringify(usernameUpdateError.data.message)}` ; 
+        const pwdErrMessage = `${passwordUpdateError.status} : ${JSON.stringify(passwordUpdateError.data.message)}` ; 
+
+        if (usernameErrMessage || pwdErrMessage) { setMessage(`${usernameErrMessage}`) }
 
         const timer = setTimeout(() => {
           setMessage(null) ; 
         }, 2000);
         return () => clearTimeout(timer);
       }
-      else if (data) {
-        dispatch(setUsername({ storeUsername: data?.response }));
-        setMessage("Username updated successfully") ; 
+      else if (usernameUpdateData || passwordUpdateData) {
+        
+        if (usernameUpdateData?.response !== "") {
+          dispatch(setUsername({ storeUsername: usernameUpdateData?.response }));
+        }
+
+        setMessage("Changes updated successfully") ; 
 
         const timer = setTimeout(() => {
           navigate("/protected") ; 
@@ -78,7 +105,10 @@ export default function Settings () {
         return () => clearTimeout(timer);
       }
     } 
-    , [data , isLoading , isError]
+    , [ isUpdatingUsername,isUpdatingPassword, 
+        usernameUpdateError,passwordUpdateError, 
+        usernameUpdateData, passwordUpdateData,
+      ]
   ); 
 
   // handle message display
@@ -101,11 +131,11 @@ export default function Settings () {
         <label htmlFor="email">New Password: </label>
         <div className="flex items-center">
           <input
-            type= { pwdVisibility ? "text" : "password" }
+            type= { newPwdVisible ? "text" : "password" }
             name="newpassword"
             className="w-72 md:w-96 h-10 bg-white px-2 my-2 rounded-md"
           />
-          <EyeIcon eyeClicked={ showPassword }/>
+          <EyeIcon eyeClicked={ showNewPassword }/>
         </div>
       </div>
 
@@ -114,7 +144,7 @@ export default function Settings () {
         <div className="flex items-center">
           <input
             required
-            type= { pwdVisibility ? "text" : "password" }
+            type= { pwdVisible ? "text" : "password" }
             name="currentpassword"
             className="w-72 md:w-96 h-10 bg-white px-2 my-2 rounded-md"
           />
