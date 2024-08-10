@@ -89,4 +89,21 @@ This application is a simple User connection application, to :
       ├── App.jsx
       ├── main.jsx
   ├── .env
-  └── package.json```
+  └── package.json
+```
+
+## Swagger documentation
+Configure and start your backend server on port 5050
+As mentionned in swagger.yaml file, doc route is http://localhost:5050/api/user . 
+
+Configure your backend environment variables (.env file) with following variables names (update according to your own choices) : 
+- PORT : 5050
+- MONGO_URI : "mongodb://localhost:27017/{yourDBname}"
+- CORS_ORIGIN= "your_frontend_URL"
+- JWT_SECRET= "your_secret_key_string"
+
+where 27017 is default mongodb local port. 
+Your frontend URL depends on your project : frontend default port for Vite is 5173 
+-> URL http://localhost:5173. 
+
+In your browser, use URL http://localhost:5050/api-docs to access Swagger documentation. 

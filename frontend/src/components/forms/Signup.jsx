@@ -17,22 +17,16 @@ export default function Signup () {
   // display password on clic on eye icon (password hidden by default)
   const showPassword01 = (value) => {
     // if eye is closed, password is visible
-    if (value) {
-      setPwd01Visibility (true) ; 
-    }else{
-      setPwd01Visibility (false) ; 
-    }
+    if (value) { setPwd01Visibility (true) ; }
+    else { setPwd01Visibility (false) ; }
   }
 
   const showPassword02 = (value) => {
     let show ; 
 
     // if eye is closed, password is visible
-    if (value) {
-      setPwd02Visibility (true) ; 
-    }else{
-      setPwd02Visibility (false) ; 
-    }
+    if (value) { setPwd02Visibility (true) ; }
+    else { setPwd02Visibility (false) ; }
   }
 
   // check if password confirmed (2 passwords identical)
@@ -41,7 +35,7 @@ export default function Signup () {
     pwd02 = pwd02.trim() ; 
 
     if (pwd01 === pwd02) { return true }
-    else{ return false }
+    else { return false }
   }
 
   // on form submit
@@ -50,7 +44,6 @@ export default function Signup () {
     event.preventDefault() ; 
 
     const formDataObj = new FormData (event.target) ; 
-
     const pwdConfirmed = checkPwd (formDataObj.get("pwd01") , formDataObj.get("pwd02")) ; 
 
     if (pwdConfirmed) {

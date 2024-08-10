@@ -15,7 +15,6 @@ import PrivateRoute from "./components/protected/PrivateRoute.jsx"
 import HomeConnect from "./components/protected/HomeConnect.jsx"
 import Settings from "./components/protected/Settings.jsx"
 
-
 const router = createBrowserRouter ( [ 
 	// <Home /> child
 	{
@@ -83,14 +82,26 @@ const router = createBrowserRouter ( [
 		]
 	} , 
 
-	// <Message /> child
+	// Answers route
+	{
+		path: "/reply" , 
+		element: <App /> , 
+		children: [
+			{
+				path: "/reply" , 
+				element: <Message /> 
+			}
+		]
+	} , 
+
+	// Undefined routes
 	{
 		path: "*" , 
 		element: <App /> , 
 		children: [
 			{
 				path: "*" , 
-				element: <Message text="Error 404 : Oups ! Nothing here !" /> 
+				element: <Message text="Oops ! Nothing here ! ... " /> 
 			}
 		]
 	}

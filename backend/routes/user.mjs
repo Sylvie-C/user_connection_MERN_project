@@ -57,7 +57,7 @@ router.post (
       const email = user.email ; 
       const userName = user.username ; 
 
-      return res.status(200).json( { email , userName , token } );
+      return res.status(200).json( { response : { email , userName , token }} );
     }
     catch (err) {
       console.error('Connection error:', err);
@@ -84,7 +84,7 @@ router.patch (
       // check password
       const isValid = await bcrypt.compare ( req.body.password , user.password ) ; 
       if (!isValid) { 
-        return res.status(401).json( { message: "Wrong password" } ) ; 
+        return res.status(401).json( { message: "Unauthorized : Wrong password" } ) ; 
       } ;  
  
       // update username
@@ -93,7 +93,7 @@ router.patch (
         { $set: { username: req.body.username } },
         { new: true } , 
       );
-      return res.status(200).json( { message : "Username updated successfully" , modifiedObj: newUser } ); 
+      return res.status(200).json( { message : "Username updated successfully" , response: newUser.username } ); 
     } 
     catch (err) {
       console.error('Error in user.mjs file : ', err); 

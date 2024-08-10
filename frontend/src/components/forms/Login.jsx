@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { Navigate } from "react-router-dom"; 
 import { useDispatch } from "react-redux"; 
 
 import EyeIcon from "./EyeIcon"; 
@@ -10,13 +10,12 @@ import { useLoginUserMutation } from '../../features/login/loginAPI';
 
 
 export default function Login () {
+  const [ pwdVisibility , setPwdVisibility ] = useState (false) ; 
 
-  const navigate = useNavigate() ; 
   const dispatch = useDispatch() ; 
 
   const [ loginUser, { isLoading, isError, error , data } ] = useLoginUserMutation(); // Query RTK data fetch
-  const [ pwdVisibility , setPwdVisibility ] = useState (false) ;  
-
+ 
   // display password on clic on eye icon (hidden by default)
   const showPassword = (value) => {
     // if eye is closed, password is visible
@@ -24,6 +23,7 @@ export default function Login () {
     else { setPwdVisibility (false) ; }
   }
 
+  // handle form submit
   const handleSubmit =  async (event) => {
     event.preventDefault() ; 
     
@@ -36,29 +36,28 @@ export default function Login () {
 
     try {
       const result = await loginUser(dataIn).unwrap();
-      const token = result?.token; 
+      const token = result?.response.token; 
 
       if (token) {
         dispatch( setAuth ( { isAuthenticated: true } ) ) ; 
-        dispatch( setUsername ( { storeUsername: result?.userName } ) ) ;
-        dispatch( setUserEmail ( { storeEmail: result?.email } ) ) ; 
+        dispatch( setUsername ( { storeUsername: result?.response.userName } ) ) ;
+        dispatch( setUserEmail ( { storeEmail: result?.response.email } ) ) ; 
         dispatch( setToken ( { storeToken: token } ) ) ; 
       }
-
-      navigate ("/protected") ; 
     }
     catch (backendErrorObj) {
       console.error ("There was a problem : " , backendErrorObj) ; 
     }
   }
-
-  if (isLoading) return <Message text="Loading : please wait ..." /> ;
+ 
+  if (isLoading) { return <Message text= "Loading... Please wait... " /> }
   if (isError) { 
     const errorMessage = `${error.status} : ${JSON.stringify(error.data.message)}` ; 
-    return <Message text= {errorMessage} /> ; 
+    return <Message text= {errorMessage} />
   }
-
-  if (data) return <Message text="You are now logged in" />
+  if (data) {
+    return ( <Navigate to="/protected" /> )
+  }
 
   return (
     <div className="p-2">

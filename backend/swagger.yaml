@@ -19,20 +19,14 @@ paths:
       description: User subscription with required email & password
       operationId: create
       requestBody:
-        description: At least email & password, username not required
+        description: "At least email & password, username not required"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/User_signup'
       responses:
         "201": 
           description: User successfully registered
-          headers:
-            X-Rate-Limit:
-              description: calls per hour allowed by the user
-              schema:
-                type: integer
-                format: int32
           content:
             application/json:
               schema:
@@ -72,29 +66,87 @@ paths:
             schema:
               $ref: '#/components/schemas/User_login'
       responses:
-        default: 
-          description: User successfully logged in
+        "200" : 
+          description: "{ status: 200 , response : { email: , userName: , token: } }"
           content:
-            application/json:
-              schema:
+            application/json: 
+              schema: 
                 type: object
                 properties:
-                  userId: 
-                    type: string
-                    example: 66a254f4e08ab91c... 
-                  token:
-                    type: string
-                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ... 
+                  status: 
+                    type: integer
+                  response: 
+                    type: object
+                    properties: 
+                      email: 
+                        type: string
+                      username: 
+                        type: string
+                      token: 
+                        type: string
         '404':
-          description: User not found
+          description: "User not registered"
         '401': 
-          description: Unauthorized
+          description: "Unauthorized (wrong password)"
         '500': 
-          description: Internal Server Error
-        
+          description: "Internal Server Error"
+  
+  /update/username: 
+    patch:
+      tags: 
+        - User
+      summary: Update username
+      description: ''
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Username_update'
+
+      responses: 
+        "200" : 
+          description: "Username updated successfully"
+          content: 
+            application/json: 
+              schema: 
+                type: object
+                properties: 
+                  status: 
+                    type: integer
+                  response: 
+                    type: object
+                    description: "Returned object after update in db"
+                    example: { message: "Username updated successfully" , response: "newUsername"}
+
+        "404" : 
+          description: "User not registered"
+        "403" : 
+          description: "Invalid token for this user"
+        "401" : 
+          description: "Unauthorized : Wrong password"
+        "500" : 
+          description: "Internal Server error"
+  
 components:
   schemas:
-    User:
+    User: 
+      description: "User object in database"
+      type: object
+      properties: 
+        _id: 
+          type: object
+        username: 
+          type: string
+        email: 
+          type: string
+        password: 
+          type: string
+        date: 
+          type: object
+    
+    User_signup:
+      description: "User object to submit to subscribe"
       type: object
       properties:
         username:
@@ -106,7 +158,9 @@ components:
       required: 
         - email
         - password
+    
     User_login: 
+      description: "User object to submit to log in"
       type: object
       properties:
         email:
@@ -116,27 +170,46 @@ components:
       required: 
         - email
         - password
-    ApiResponse:
+
+    Username_update: 
+      description: "User object to submit to update username in database"
       type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
+      properties: 
+        email:
           type: string
+        password:
+          type: string
+        token: 
+          type: string
+        username: 
+          type: string
+          description: "New Username to be saved in database"
+      required: 
+        - email
+        - password
+        - token
+        - username
+
   requestBodies:
-    User:
-      description: User object to be added to database
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/User'
+    User_signup: 
+      description: "User object to submit for signup"
+      content: 
+        application/json: 
+          schema: 
+            $ref: "#/components/schemas/User_signup"
     User_login:
-      description: User object to submit for login
+      description: "User object to submit for login"
       content: 
         application/json: 
           schema: 
             $ref: '#/components/schemas/User_login'
+    Username_update: 
+      description: "User object to submit for username update"
+      content: 
+        application/json: 
+          schema: 
+            $ref: '#/components/schemas/Username_update'
+            
   securitySchemes:
     bearerAuth: 
       type: http
