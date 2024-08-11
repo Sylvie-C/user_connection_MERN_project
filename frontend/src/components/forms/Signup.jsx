@@ -71,8 +71,6 @@ export default function Signup () {
         email: formDataObj.get("email") , 
         password: formDataObj.get("pwd02") , 
       } 
-
-      console.log ("data signup ? : " , userData) ; 
   
       try {
         const result = await signup(userData).unwrap();         
@@ -107,9 +105,6 @@ export default function Signup () {
       }
     } , [isLoading, error, data]
   ); 
-
-
-
 
   // handle component or message display
   const responseDisplay = message 

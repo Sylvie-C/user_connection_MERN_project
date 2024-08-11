@@ -54,15 +54,12 @@ export default function Settings () {
       email: storedEmail,
       password: formDataObj.get("currentpassword") ,
       token: storedToken, 
+      username: formDataObj.get("username") , 
     }
 
-    // if username changed, add it to request
-    const newUsername = formDataObj.get("username").trim();
-    if (newUsername) { reqData.username = newUsername; }
+    let newPwd = formDataObj.get("newpassword").trim() ; 
 
-    // if password changed, check its format and add it to request
-    const newPwd = formDataObj.get("newpassword").trim(); 
-
+    // check password format
     if (newPwd) {
       if (!validatePassword(newPwd)) {
         alert ("Your password must have : \
@@ -71,13 +68,16 @@ export default function Settings () {
           \nmust not contain white spaces. \
           \n\
           \nUpdate cancelled ");
+      }else{
+        reqData.newPassword = newPwd; 
       }
     }    
-    reqData.newPassword = newPwd;
 
     // new username request submit (send to db)
     try {
-      const usernameReturn = await updateUsername(reqData).unwrap();
+      if (reqData.username) {
+        const usernameReturn = await updateUsername(reqData).unwrap();
+      }
     } 
     catch (usernameUpdateError) {
       console.error('Failed to update user:', usernameUpdateError);
@@ -85,7 +85,9 @@ export default function Settings () {
 
     // new password request submit (send to db)
     try {
-      const pwdReturn = await updatePassword(reqData).unwrap(); 
+      if (reqData.newPassword) {
+        const pwdReturn = await updatePassword(reqData).unwrap(); 
+      }
     }
     catch (passwordUpdateError) {
       console.error("Failed to update password: " , passwordUpdateError) ; 
