@@ -38,6 +38,12 @@ export default function Settings () {
     else { setNewPwdVisible(false)}
   }
 
+  // check password format
+  const validatePassword = (password) => {
+    const regex = /^(?!.*\s).{8,40}$/ ; 
+    return regex.test(password);
+  }
+
   // handle form submit
   const handleSubmit = async (event) => {
     event.preventDefault() ; 
@@ -48,39 +54,58 @@ export default function Settings () {
       email: storedEmail,
       password: formDataObj.get("currentpassword") ,
       token: storedToken, 
-      newPassword: formDataObj.get("newpassword") , 
     }
 
-    // if username not empty, add it to data request
-    const newUsername = formDataObj.get("username") ; 
-    if (newUsername !== "") { reqData.username = formDataObj.get("username") } ; 
+    // if username changed, add it to request
+    const newUsername = formDataObj.get("username").trim();
+    if (newUsername) { reqData.username = newUsername; }
 
-    try {
-      if (reqData.username !== "") {
-        const usernameReturn = await updateUsername(reqData).unwrap();
+    // if password changed, check its format and add it to request
+    const newPwd = formDataObj.get("newpassword").trim(); 
+
+    if (newPwd) {
+      if (!validatePassword(newPwd)) {
+        alert ("Your password must have : \
+          \nat least 8 characters, \
+          \nnot more than 40 characters, \
+          \nmust not contain white spaces. \
+          \n\
+          \nUpdate cancelled ");
       }
+    }    
+    reqData.newPassword = newPwd;
+
+    // new username request submit (send to db)
+    try {
+      const usernameReturn = await updateUsername(reqData).unwrap();
     } 
     catch (usernameUpdateError) {
       console.error('Failed to update user:', usernameUpdateError);
     }
 
+    // new password request submit (send to db)
     try {
-      if (reqData.newPassword !== "") {
-        const pwdReturn = await updatePassword(reqData).unwrap(); 
-      }
+      const pwdReturn = await updatePassword(reqData).unwrap(); 
     }
     catch (passwordUpdateError) {
       console.error("Failed to update password: " , passwordUpdateError) ; 
     }
   }
 
-  // on every server response (data returned after submit), display message to user
+  // on every server response, display "isLoading" message
   useEffect(
     () => {
       if (isUpdatingUsername || isUpdatingPassword ) {
         setMessage("Loading... Please wait...") ; 
       }
-      else if (isUsernameUpdateError || isPasswordUpdateError) {
+    } 
+    , [ isUpdatingUsername,isUpdatingPassword, ]
+  );
+  
+  // THEN, on every server response, display error message (if error)
+  useEffect (
+    () => {
+      if (isUsernameUpdateError || isPasswordUpdateError) {
         const usernameErrMessage = `${usernameUpdateError.status} : ${JSON.stringify(usernameUpdateError.data.message)}` ; 
         const pwdErrMessage = `${passwordUpdateError.status} : ${JSON.stringify(passwordUpdateError.data.message)}` ; 
 
@@ -91,25 +116,27 @@ export default function Settings () {
         }, 2000);
         return () => clearTimeout(timer);
       }
-      else if (usernameUpdateData || passwordUpdateData) {
-        
-        if (usernameUpdateData?.response !== "") {
+    }
+    , [ usernameUpdateError,passwordUpdateError,  ]
+  ) ; 
+
+   // on every server response, display successful message (if data)
+  useEffect (
+    () => {
+      if (usernameUpdateData || passwordUpdateData) {
+        if (usernameUpdateData?.response) {
           dispatch(setUsername({ storeUsername: usernameUpdateData?.response }));
         }
 
         setMessage("Changes updated successfully") ; 
-
         const timer = setTimeout(() => {
           navigate("/protected") ; 
         }, 1000);
         return () => clearTimeout(timer);
       }
-    } 
-    , [ isUpdatingUsername,isUpdatingPassword, 
-        usernameUpdateError,passwordUpdateError, 
-        usernameUpdateData, passwordUpdateData,
-      ]
-  ); 
+    }
+    , [ usernameUpdateData, passwordUpdateData, ]
+  ) ; 
 
   // handle message display
   const responseDisplay = message 

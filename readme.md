@@ -10,7 +10,7 @@ This application is a simple User connection application, to :
 - delete a user from a Mongo database. 
 
 ## Features
-- **CRUD** : Create, Read, Update, Delete a User allowed, 
+- **CRUD** : Create, Read, Update a User allowed, 
 - **Authentication and Authorization** : Use JWT to secure routes. 
 - **Reactive UI**: Dynamic user interface with React.
 - **RESTful API**: Well-structured endpoints to interact with the database.
@@ -51,6 +51,12 @@ This application is a simple User connection application, to :
     npm start
     ```
 
+    - Use 
+        ```sh 
+        npm run backend-dev
+        ``` 
+    command also possible for development phase (please refer to "package.json" file)
+
 ### Frontend
 1. In the root directory of the project, go to the frontend folder:
     ```sh
@@ -72,6 +78,12 @@ This application is a simple User connection application, to :
     npm start
     ```
 
+    - Use 
+        ```sh 
+        npm run dev
+        ``` 
+    command also possible for development phase (please refer to "package.json" file)
+
 ## Project Architecture
 ```
 /backend
@@ -79,15 +91,24 @@ This application is a simple User connection application, to :
   ├── models
   ├── routes
   ├── .env
-  └── server.js
+  ├── package.json
+  └── server.mjs
 /frontend
   ├── public
   ├── src
-      ├── components
-      ├── App.css
-      ├── index.css
-      ├── App.jsx
-      ├── main.jsx
+    ├── components
+        ├── forms
+        ├── Navbar
+        └── protected
+    ├── features
+        ├── login
+        ├── signup
+        └── updateUser
+    ├── App.css
+    ├── index.css
+    ├── App.jsx
+    ├── main.jsx
+    ├── components
   ├── .env
   └── package.json
 ```

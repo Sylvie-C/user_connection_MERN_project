@@ -87,7 +87,7 @@ paths:
         '404':
           description: "User not registered"
         '401': 
-          description: "Unauthorized (wrong password)"
+          description: "Unauthorized : wrong password"
         '500': 
           description: "Internal Server Error"
   
@@ -102,7 +102,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Username_update'
+              $ref: '#/components/schemas/User_update'
 
       responses: 
         "200" : 
@@ -122,11 +122,49 @@ paths:
         "404" : 
           description: "User not registered"
         "403" : 
-          description: "Invalid token for this user"
+          description: "Invalid token"
         "401" : 
           description: "Unauthorized : Wrong password"
         "500" : 
           description: "Internal Server error"
+  
+  /update/password: 
+    patch:
+      tags: 
+        - User
+      summary: Update password
+      description: ''
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User_update'
+
+      responses: 
+        "200" : 
+          description: "Password updated successfully"
+          content: 
+            application/json: 
+              schema: 
+                type: object
+                properties: 
+                  status: 
+                    type: integer
+                  response: 
+                    type: object
+                    description: "Returned object after update in db"
+                    example: { message: "Username updated successfully" , response: "newUsername"}
+
+        "404" : 
+          description: "User not registered"
+        "403" : 
+          description: "Invalid token"
+        "401" : 
+          description: "Unauthorized : Wrong password"
+        "500" : 
+          description: "Internal Server error"
+  
   
 components:
   schemas:
@@ -171,8 +209,8 @@ components:
         - email
         - password
 
-    Username_update: 
-      description: "User object to submit to update username in database"
+    User_update: 
+      description: "User object to submit to update username or password in database"
       type: object
       properties: 
         email:
@@ -181,6 +219,8 @@ components:
           type: string
         token: 
           type: string
+        newPassword: 
+          type: string
         username: 
           type: string
           description: "New Username to be saved in database"
@@ -188,7 +228,6 @@ components:
         - email
         - password
         - token
-        - username
 
   requestBodies:
     User_signup: 
@@ -203,12 +242,12 @@ components:
         application/json: 
           schema: 
             $ref: '#/components/schemas/User_login'
-    Username_update: 
-      description: "User object to submit for username update"
+    User_update: 
+      description: "User object to submit for username or password update in database"
       content: 
         application/json: 
           schema: 
-            $ref: '#/components/schemas/Username_update'
+            $ref: '#/components/schemas/User_update'
             
   securitySchemes:
     bearerAuth: 

@@ -24,9 +24,9 @@ router.post(
     }
     catch (err) { 
       if (err.code === 11000) {  // unicity mongodb code error (mogoose schema "unique" property)
-        return res.status(400).json( { message: 'An account already exists with this email. ' } );
+        return res.status(400).json( { message: 'An account already exists with this email.' } );
       }
-      res.status(500).send("Error adding new user") ; 
+      res.status(500).json( { message: 'Internal Server Error : user not registered.' } );
     }
   }
 )
@@ -78,7 +78,7 @@ router.patch (
       const decodedJwtToken = jwt.verify(jwtToken , process.env.JWT_SECRET) ; 
 
       if (!decodedJwtToken) {
-        return res.status(403).json( { message: "Invalid token for this user" } );
+        return res.status(403).json( { message: "Invalid token" } );
       }  
       
       // check password
@@ -87,13 +87,15 @@ router.patch (
         return res.status(401).json( { message: "Unauthorized : Wrong password" } ) ; 
       } ;  
  
-      // update username
-      const newUser = await UserModel.findOneAndUpdate(
-        { email: req.body.email },
-        { $set: { username: req.body.username } },
-        { new: true } , 
-      );
-      return res.status(200).json( { message : "Username updated successfully" , response: newUser.username } ); 
+      // update username (if truthy)
+      if (req.body.username) {
+        const newUser = await UserModel.findOneAndUpdate(
+          { email: req.body.email },
+          { $set: { username: req.body.username } },
+          { new: true } , 
+        );
+        return res.status(200).json( { message : "Username updated successfully" , response: newUser.username } ); 
+      }
     } 
     catch (err) {
       console.error('Error in user.mjs file : ', err); 
@@ -114,7 +116,7 @@ router.patch(
       const decodedJwtToken = jwt.verify(jwtToken , process.env.JWT_SECRET) ; 
 
       if (!decodedJwtToken) {
-        return res.status(403).json( { message: "Invalid token for this user" } );
+        return res.status(403).json( { message: "Invalid token" } );
       }  
 
       // check password
@@ -123,15 +125,17 @@ router.patch(
         return res.status(401).json( { message: "Unauthorized : Wrong password" } ) ; 
       } ; 
 
-      // Hash password
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
-
-      // Update password
-      user.password = hashedPassword;
-      await user.save();
-
-      return res.status(200).json({ message: "Password updated successfully" });
+      // Hash and save new password
+      if (req.body.newPassword) {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
+  
+        // Update password
+        user.password = hashedPassword;
+        await user.save();
+  
+        return res.status(200).json({ message: "Password updated successfully" });
+      }
     } catch (error) {
       return res.status(500).json({ message: "Internal server error", error });
     }
