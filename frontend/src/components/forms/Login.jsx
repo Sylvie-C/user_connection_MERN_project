@@ -86,7 +86,6 @@ export default function Login () {
               />
               <EyeIcon eyeClicked={ showPassword }/>
             </div>
-            <a href="#" className="text-sm italic underline hover:not-italic hover:text-emerald-950">Forgot your password ?</a>
           </div>
 
           <div className="w-72 md:w-96 flex justify-center">
