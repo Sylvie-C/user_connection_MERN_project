@@ -22,13 +22,17 @@ app.use (cors(
 
 app.use ("/api/user" , users) ; 
 
-app.use (
-  "/api-docs" , 
-  swaggerUi.serve , 
-  swaggerUi.setup (swaggerDocs) ,
-) ; 
+// API Documentation
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
+}
+
+// server connection confirmation in browser
+app.get('/', (req, res, next) => {
+  res.send('Backend server connected successfully. ') ; 
+})
 
 app.listen(
   PORT ,
-  ( console.log (`Server listening on port ${PORT}`))
+  ( console.log (`Server listening on port ${PORT}`)) 
 ) ; 

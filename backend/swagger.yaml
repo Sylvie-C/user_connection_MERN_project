@@ -9,6 +9,7 @@ servers:
 tags:
   - name: User
     description: Operations about user
+    
 paths:
   /signup:
     post:
@@ -18,25 +19,172 @@ paths:
       description: User subscription with required email & password
       operationId: create
       requestBody:
-        description: Created user object
+        description: "At least email & password, username not required"
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/User_signup'
       responses:
-        default:
+        "201": 
           description: User successfully registered
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    format: hexadecimal
+                    description: unique identifier (mongodb 'ObjectId' type)
+                    example: "507f1f77bcf86cd799439011"
+                  username: 
+                    type: string
+                  email: 
+                    type: string
+                  password:
+                    type: string
+                    description: hashed password
+                  date: 
+                    format: date
+                    description: date of registration
+                    example: 2024-07-25T13:36:52.124+00:00
         "400": 
           description: An account already exists with this email
         "500": 
           description: Internal Server Error
+          
+  /login: 
+    post:
+      tags:
+        - User
+      summary: Logs user into the system
+      description: ''
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User_login'
+      responses:
+        "200" : 
+          description: "{ status: 200 , response : { email: , userName: , token: } }"
+          content:
+            application/json: 
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: integer
+                  response: 
+                    type: object
+                    properties: 
+                      email: 
+                        type: string
+                      username: 
+                        type: string
+                      token: 
+                        type: string
+        '404':
+          description: "User not registered"
+        '401': 
+          description: "Unauthorized : wrong password"
+        '500': 
+          description: "Internal Server Error"
+  
+  /update/username: 
+    patch:
+      tags: 
+        - User
+      summary: Update username
+      description: ''
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User_update'
+
+      responses: 
+        "200" : 
+          description: "Username updated successfully"
+          content: 
+            application/json: 
+              schema: 
+                type: object
+                properties: 
+                  status: 
+                    type: integer
+                  response: 
+                    type: object
+                    description: "Returned object after update in db"
+                    example: { message: "Username updated successfully" , response: "newUsername"}
+
+        "404" : 
+          description: "User not registered"
+        "403" : 
+          description: "Invalid token"
+        "401" : 
+          description: "Unauthorized : Wrong password"
+        "500" : 
+          description: "Internal Server error"
+  
+  /update/password: 
+    patch:
+      tags: 
+        - User
+      summary: Update password
+      description: ''
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User_update'
+
+      responses: 
+        "200" : 
+          description: "Password updated successfully"
+          content: 
+            application/json: 
+              schema: 
+                type: object
+                properties: 
+                  status: 
+                    type: integer
+                  response: 
+                    type: object
+                    description: "Returned object after update in db"
+                    example: { message: "Username updated successfully" , response: "newUsername"}
+
+        "404" : 
+          description: "User not registered"
+        "403" : 
+          description: "Invalid token"
+        "401" : 
+          description: "Unauthorized : Wrong password"
+        "500" : 
+          description: "Internal Server error"
+  
+  
 components:
   schemas:
-    User:
+    User: 
+      description: "User object in database"
+      type: object
+      properties: 
+        _id: 
+          type: object
+        username: 
+          type: string
+        email: 
+          type: string
+        password: 
+          type: string
+        date: 
+          type: object
+    
+    User_signup:
+      description: "User object to submit to subscribe"
       type: object
       properties:
         username:
@@ -48,18 +196,64 @@ components:
       required: 
         - email
         - password
-    ApiResponse:
+    
+    User_login: 
+      description: "User object to submit to log in"
       type: object
       properties:
-        code:
-          type: integer
-          format: int32
-        message:
+        email:
           type: string
+        password:
+          type: string
+      required: 
+        - email
+        - password
+
+    User_update: 
+      description: "User object to submit to update username or password in database"
+      type: object
+      properties: 
+        email:
+          type: string
+        password:
+          type: string
+        token: 
+          type: string
+        newPassword: 
+          type: string
+        username: 
+          type: string
+          description: "New Username to be saved in database"
+      required: 
+        - email
+        - password
+        - token
+
   requestBodies:
-    User:
-      description: User object to be added to database
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/User'
+    User_signup: 
+      description: "User object to submit for signup"
+      content: 
+        application/json: 
+          schema: 
+            $ref: "#/components/schemas/User_signup"
+    User_login:
+      description: "User object to submit for login"
+      content: 
+        application/json: 
+          schema: 
+            $ref: '#/components/schemas/User_login'
+    User_update: 
+      description: "User object to submit for username or password update in database"
+      content: 
+        application/json: 
+          schema: 
+            $ref: '#/components/schemas/User_update'
+            
+  securitySchemes:
+    bearerAuth: 
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security: 
+  - bearerAuth: []

@@ -6,15 +6,16 @@ This project is a fullstack application developped with the MERN stack (MongoDB,
 This application is a simple User connection application, to : 
 - add a new user to a Mongo database, 
 - get a user from a Mongo database, 
-- update a username, 
+- update a username or a user password in a Mongo database, 
 - delete a user from a Mongo database. 
 
 ## Features
-- **CRUD** : Create, Read, Update, Delete a User allowed, 
+- **CRUD** : Create, Read, Update a User allowed, 
 - **Authentication and Authorization** : Use JWT to secure routes. 
 - **Reactive UI**: Dynamic user interface with React.
 - **RESTful API**: Well-structured endpoints to interact with the database.
 - **Mongoose** : Data object defined with structured models. 
+- **Swagger**: API Swagger documentation (backend_url/api-docs route). 
 
 ## Prerequisites
 - Make sure you have installed [Node.js](https://nodejs.org/) on your machine. 
@@ -50,6 +51,12 @@ This application is a simple User connection application, to :
     npm start
     ```
 
+    - Use 
+        ```sh 
+        npm run backend-dev
+        ``` 
+    command also possible for development phase (please refer to "package.json" file)
+
 ### Frontend
 1. In the root directory of the project, go to the frontend folder:
     ```sh
@@ -71,6 +78,12 @@ This application is a simple User connection application, to :
     npm start
     ```
 
+    - Use 
+        ```sh 
+        npm run dev
+        ``` 
+    command also possible for development phase (please refer to "package.json" file)
+
 ## Project Architecture
 ```
 /backend
@@ -78,14 +91,40 @@ This application is a simple User connection application, to :
   ├── models
   ├── routes
   ├── .env
-  └── server.js
+  ├── package.json
+  └── server.mjs
 /frontend
   ├── public
   ├── src
-      ├── components
-      ├── App.css
-      ├── index.css
-      ├── App.jsx
-      ├── main.jsx
+    ├── components
+        ├── forms
+        ├── Navbar
+        └── protected
+    ├── features
+        ├── login
+        ├── signup
+        └── updateUser
+    ├── App.css
+    ├── index.css
+    ├── App.jsx
+    ├── main.jsx
+    ├── components
   ├── .env
-  └── package.json```
+  └── package.json
+```
+
+## Swagger documentation
+Configure and start your backend server on port 5050
+As mentionned in swagger.yaml file, doc route is http://localhost:5050/api/user . 
+
+Configure your backend environment variables (.env file) with following variables names (update according to your own choices) : 
+- PORT : 5050
+- MONGO_URI : "mongodb://localhost:27017/{yourDBname}"
+- CORS_ORIGIN= "your_frontend_URL"
+- JWT_SECRET= "your_secret_key_string"
+
+where 27017 is default mongodb local port. 
+Your frontend URL depends on your project : frontend default port for Vite is 5173 
+-> URL http://localhost:5173. 
+
+In your browser, use URL http://localhost:5050/api-docs to access Swagger documentation. 

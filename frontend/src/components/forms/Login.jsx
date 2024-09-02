@@ -1,60 +1,69 @@
+import { useState } from "react";
+import { Navigate } from "react-router-dom"; 
+import { useDispatch } from "react-redux"; 
 
-import { useState } from "react"; 
 import EyeIcon from "./EyeIcon"; 
+import Message from "../../components/Message" ; 
+
+import { setAuth , setUsername , setUserEmail , setToken } from "../../features/login/loginSlice";
+import { useLoginUserMutation } from '../../features/login/loginAPI'; 
+
 
 export default function Login () {
+  const [ pwdVisibility , setPwdVisibility ] = useState (false) ; 
 
-  const [ pwdVisibility , setPwdVisibility ] = useState (false) ;  
+  const dispatch = useDispatch() ; 
 
-  // display password on clic on eye icon (password hidden by default)
+  const [ loginUser, { isLoading, isError, error , data } ] = useLoginUserMutation(); // Query RTK data fetch
+ 
+  // display password on clic on eye icon (hidden by default)
   const showPassword = (value) => {
     // if eye is closed, password is visible
-    if (value) {
-      setPwdVisibility (true) ; 
-    }else{
-      setPwdVisibility (false) ; 
-    }
+    if (value) { setPwdVisibility (true) ; }
+    else { setPwdVisibility (false) ; }
   }
 
+  // handle form submit
   const handleSubmit =  async (event) => {
     event.preventDefault() ; 
     
     const formDataObj = new FormData (event.target); 
-    console.log (formDataObj); 
+
+    const dataIn = {
+      email: formDataObj.get("email"), 
+      password: formDataObj.get("password") ,
+    }
 
     try {
-      const data = {
-        email: formDataObj.get("email"), 
-        password: formDataObj.get("password") ,
-      }
+      const result = await loginUser(dataIn).unwrap();
+      const token = result?.response.token; 
 
-      const response = await fetch (
-        `${import.meta.env.VITE_BACKEND_URL}/api/user/` , // route defined in backend /user.js file
-        {
-          method: "POST" , 
-          headers: { "Content-Type" : "application/json" } , 
-          body: JSON.stringify(data) , 
-        }
-      )
-
-      if (response.ok) {
-        alert("You are now logged in.") ; 
-        navigate("/protected") ; 
-      }else{
-        alert("Oops ! There was a problem. You are not registered. ") ; 
+      if (token) {
+        dispatch( setAuth ( { isAuthenticated: true } ) ) ; 
+        dispatch( setUsername ( { storeUsername: result?.response.userName } ) ) ;
+        dispatch( setUserEmail ( { storeEmail: result?.response.email } ) ) ; 
+        dispatch( setToken ( { storeToken: token } ) ) ; 
       }
     }
-
-    catch (err) {
-      console.error (err) ; 
+    catch (backendErrorObj) {
+      console.error ("There was a problem : " , backendErrorObj) ; 
     }
+  }
+ 
+  if (isLoading) { return <Message text= "Loading... Please wait... " /> }
+  if (isError) { 
+    const errorMessage = `${error.status} : ${JSON.stringify(error.data.message)}` ; 
+    return <Message text= {errorMessage} />
+  }
+  if (data) {
+    return ( <Navigate to="/protected" /> )
   }
 
   return (
     <div className="p-2">
       <h1 className="font-heading text-4xl text-center mb-6 md:mb-10">Log in Form</h1>
 
-      <form onSubmit={handleSubmit} className="mx-auto w-full sm:w-3/5 pt-4 md:pt-10 pb-10 flex flex-col bg-purple-400 rounded-md">
+      <form onSubmit= { handleSubmit } className="mx-auto w-full sm:w-3/5 pt-4 md:pt-10 pb-10 flex flex-col bg-purple-400 rounded-md">
         <div className="mx-auto w-72 sm:w-fit sm:px-4">
           <div className="flex flex-col mb-4">
             <label htmlFor="email">Your email:</label>
@@ -77,7 +86,6 @@ export default function Login () {
               />
               <EyeIcon eyeClicked={ showPassword }/>
             </div>
-            <a href="#" className="text-sm italic underline hover:not-italic hover:text-emerald-950">Forgot your password ?</a>
           </div>
 
           <div className="w-72 md:w-96 flex justify-center">

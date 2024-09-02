@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom" ; 
 
-export default function NavbarBtn ( { btnTxt , destination } ) {
+export default function NavbarBtn ( { btnTxt , destination="" } ) {
 
   return (
     <>
