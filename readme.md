@@ -5,9 +5,7 @@ This project is a fullstack application developped with the MERN stack (MongoDB,
 
 This application is a simple User connection application, to : 
 - add a new user to a Mongo database, 
-- get a user from a Mongo database, 
 - update a username or a user password in a Mongo database, 
-- delete a user from a Mongo database. 
 
 ## Features
 - **CRUD** : Create, Read, Update a User allowed, 
