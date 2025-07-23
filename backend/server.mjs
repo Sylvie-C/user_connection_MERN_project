@@ -11,12 +11,12 @@ const swaggerDocs = yaml.load ("./swagger.yaml") ;
 dotenv.config(); 
 const app = express(); 
 
-const PORT = process.env.PORT || "" ; 
+const PORT = process.env.BACKEND_PORT || "" ; 
 
 app.use (express.json()) ; 
 app.use (cors(
   {
-    origin: `${process.env.CORS_ORIGIN}` // frontend URI
+    origin: `${process.env.API_FRONTEND_URL}` // frontend URI
   }
 )) ; 
 

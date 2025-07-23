@@ -7,8 +7,7 @@ import UserModel from "../models/user.model.mjs" ;
 
 const router = express.Router() ; 
 
-router.post(
-  "/signup" , 
+router.post( "/signup" , 
   async (req , res) => {
     try {
         // password hash + implicit salt
@@ -31,8 +30,7 @@ router.post(
   }
 )
 
-router.post (
-  "/login" , 
+router.post ( "/login" , 
   async (req , res) => {
     try {
       const user = await UserModel.findOne( 
@@ -66,8 +64,7 @@ router.post (
   }
 )
 
-router.patch (
-  "/update/username" , 
+router.patch ( "/update/username" , 
   async (req, res) => {
     try {
       const user = await UserModel.findOne ( { email: req.body.email } ) ; 
@@ -104,8 +101,7 @@ router.patch (
   }
 )
 
-router.patch(
-  '/update/password', 
+router.patch( '/update/password', 
   async (req, res) => {
     try {
       const user = await UserModel.findOne ( { email: req.body.email } ) ; 
