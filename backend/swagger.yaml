@@ -5,6 +5,9 @@ info:
     API for User Signup / Login
   version: 1.0.0
 servers:
+  # Production (Render.com)
+  - url: https://user-connection-mern-project.onrender.com//api/user
+  # Local development
   - url: http://localhost:5050/api/user
 tags:
   - name: User

@@ -1,86 +1,44 @@
-# USER CONNECTION
+# USER CONNECTION (MERN, Vite, TailwindCSS)
 
-## Description
-This project is a fullstack application developped with the MERN stack (MongoDB, Express.js, React, Node.js) with Vite and TailwindCSS. 
+## Overview
 
-This application is a simple User connection application, to : 
-- add a new user to a Mongo database, 
-- update a username or a user password in a Mongo database, 
+A fullstack MERN (MongoDB, Express.js, React, Node.js) application for user registration, login, and profile updates.  
+Features JWT authentication, MongoDB storage, RESTful API, and interactive React UI styled with TailwindCSS.
+
 
 ## Features
-- **CRUD** : Create, Read, Update a User allowed, 
-- **Authentication and Authorization** : Use JWT to secure routes. 
-- **Reactive UI**: Dynamic user interface with React.
-- **RESTful API**: Well-structured endpoints to interact with the database.
-- **Mongoose** : Data object defined with structured models. 
-- **Swagger**: API Swagger documentation (backend_url/api-docs route). 
+- **User Management:** Register, login, update username and password.  
+- **Authentication:** JWT-secured endpoints.  
+- **RESTful API:** Well-structured Express routes.  
+- **MongoDB & Mongoose:** Robust data modeling.  
+- **Swagger:** Interactive API documentation.  
+- **Frontend:** React + Vite + TailwindCSS.  
+
 
 ## Prerequisites
-- Make sure you have installed [Node.js](https://nodejs.org/) on your machine. 
-- Please refer to "package.json" file for full details about necessary packages, and refer to the following "Installation" instructions for installation process. 
-- If you prefer [Yarn] instead of [npm] for packages installation, included with Node, make sure to install it (https://yarnpkg.com/). 
+- [Node.js](https://nodejs.org/)  
+- [MongoDB](https://www.mongodb.com/)  
+- [npm](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/)  
 
 
-## Installation
+## Environment variables
+### Frontend
+VITE_BACKEND_URL="your frontend URL"  
 
 ### Backend
-1. Clone the repository:
-    ```sh
-    git clone https://github.com/Sylvie-C/user_connection_MERN_project.git 
-    cd user_connection_MERN_project
-    ```
+- BACKEND_PORT=your backend port n° (**5050** here)  , 
+- API_FRONTEND_URL= "your frontend URL" (should be "http://localhost:5173" by default with Vite)  , 
+- MONGO_URI=`mongodb://localhost:27017/${YOUR_DB_NAME}` where 27017 is default mongodb local port,   
+- JWT_SECRET="any string secret key"  
 
-2. Install server dependencies:
-    ```sh
-    cd backend
-    npm install
-    ```
 
-3. Create a `.env` file and add the necessary environment variables:
-    ```env
-    PORT=your_backend_server_port_number
-    MONGO_URI=your_mongo_uri
-    CORS_ORIGIN=your_frontend_url
-    JWT_SECRET=your_jwt_secret
-    ```
+## Local installation
+- Install [Node.js](https://nodejs.org/) and [MongoDB](https://www.mongodb.com/) on your computer,  
+- Clone this repository,  
+- Place in /backend directory + `npm install` , then same thing with /frontend directory,  
+- Start servers from their directory with `npm run backend-dev` for backend dev phase, and `npm run dev` for frontend dev phase.  
+Please refer to package.json file for other scripts commands (e.g.: deployment).  
 
-4. Start the server :
-    ```sh
-    npm start
-    ```
-
-    - Use 
-        ```sh 
-        npm run backend-dev
-        ``` 
-    command also possible for development phase (please refer to "package.json" file)
-
-### Frontend
-1. In the root directory of the project, go to the frontend folder:
-    ```sh
-    cd frontend
-    ```
-
-2. Install client dependencies:
-    ```sh
-    npm install
-    ```
-
-3. Create a `.env` file in the `frontend` folder and add the necessary environment variables (make sure to have your variables beginning with "VITE_" if use of VITE for frontend):
-    ```env
-    VITE_BACKEND_URL=your_backend_url
-    ```
-
-4. Start the React application:
-    ```sh
-    npm start
-    ```
-
-    - Use 
-        ```sh 
-        npm run dev
-        ``` 
-    command also possible for development phase (please refer to "package.json" file)
 
 ## Project Architecture
 ```
@@ -111,16 +69,6 @@ This application is a simple User connection application, to :
   └── package.json
 ```
 
-## Swagger documentation
-Configure and start your local backend server on port 5050
-As mentionned in swagger.yaml file, backend doc and REST API route is then http://localhost:5050/api/user . 
+## Swagger documentation for local installation
+The Swagger UI is available at `http://localhost:${BACKEND_PORT}/api/user`.  
 
-Configure your backend environment variables (.env file) with following variables names (update according to your own choices) : 
-- PORT : 5050
-- MONGO_URI : "mongodb://localhost:27017/{yourDBname}"
-- CORS_ORIGIN= "your_frontend_URL"
-- JWT_SECRET= "your_secret_key_string"
-
-where 27017 is default mongodb local port. 
-Your frontend URL depends on your project : frontend default port for Vite is 5173 
--> URL http://localhost:5173. 
