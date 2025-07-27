@@ -24,7 +24,7 @@ app.use ("/api/user" , users) ;
 
 // API Documentation
 if (process.env.NODE_ENV !== 'production') {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
+  app.use('/api/user', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 }
 
 // server connection confirmation in browser
