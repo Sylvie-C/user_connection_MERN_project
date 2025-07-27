@@ -11,7 +11,7 @@ const swaggerDocs = yaml.load ("./swagger.yaml") ;
 dotenv.config(); 
 const app = express(); 
 
-const PORT = process.env.BACKEND_PORT || "" ; 
+const PORT = process.env.BACKEND_PORT || "10000" ; // 10000 = default port for render.com deployment provider
 
 app.use (express.json()) ; 
 app.use (cors(
@@ -23,9 +23,7 @@ app.use (cors(
 app.use ("/api/user" , users) ; 
 
 // API Documentation
-if (process.env.NODE_ENV !== 'production') {
-  app.use('/api/user', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
-}
+app.use('/api/user', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 // server connection confirmation in browser
 app.get('/', (req, res, next) => {
