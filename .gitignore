@@ -11,6 +11,8 @@ lerna-debug.log*
 # dependencies
 node_modules 
 
+package-lock.json
+
 # build folder
 dist-ssr
 
